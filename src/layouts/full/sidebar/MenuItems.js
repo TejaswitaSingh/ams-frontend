@@ -85,13 +85,13 @@ const Menuitems = [
   //   chip: 'Pro',
   //   chipColor: 'secondary',
   // },
-  {
-    id: uniqueId(),
-    title: 'eCommerce',
-    icon: IconShoppingCart,
-    href: 'https://modernize-react.adminmart.com/dashboards/ecommerce',
-    chip: 'Pro',
-  },
+  // {
+  //   id: uniqueId(),
+  //   title: 'eCommerce',
+  //   icon: IconShoppingCart,
+  //   href: 'https://modernize-react.adminmart.com/dashboards/ecommerce',
+  //   chip: 'Pro',
+  // },
   {
     id: uniqueId(),
     title: 'Frontend pages',
