@@ -6,7 +6,7 @@ import { styled, Container, Box } from '@mui/material';
 import Header from './header/Header';
 import Sidebar from './sidebar/Sidebar';
 import { Outlet } from "react-router";
-import Topbar from "./header/Topbar";
+// import Topbar from "./header/Topbar";
 
 const MainWrapper = styled('div')(() => ({
   display: 'flex',
@@ -33,7 +33,7 @@ const FullLayout = () => {
       {/* ------------------------------------------- */}
       {/* Topbar */}
       {/* ------------------------------------------- */}
-      <Topbar />
+      {/* <Topbar /> */}
       <MainWrapper
         className='mainwrapper'
       >
