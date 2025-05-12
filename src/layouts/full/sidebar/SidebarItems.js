@@ -11,7 +11,7 @@ import {
 import { IconPoint } from '@tabler/icons-react';
 import Menuitems from "./MenuItems";
 import logoicn from "../../../assets/images/logos/logo-dark.svg";
-import Upgrade from "./Upgrade"; 
+// import Upgrade from "./Upgrade"; 
 
 const renderMenuItems = (items, pathDirect) => {
 
@@ -82,11 +82,11 @@ const SidebarItems = () => {
     <Box sx={{ px: "24px", overflowX: 'hidden' }}>
       <MUI_Sidebar width={"100%"} showProfile={false} themeColor={"#1e4db7"} themeSecondaryColor={'#1a97f51a'}>
         <Box sx={{ margin: "0 -24px" }}>
-          <Logo img={logoicn} component={NavLink} to="/" >Flexy</Logo>
+          <Logo img={logoicn}  component={NavLink} to="/" ></Logo>
         </Box>
         {renderMenuItems(Menuitems, pathDirect)}
       </MUI_Sidebar>
-      <Upgrade />
+      {/* <Upgrade /> */}
     </Box>
   );
 };
