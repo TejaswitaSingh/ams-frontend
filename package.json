@@ -19,6 +19,7 @@
     "@svgr/rollup": "^8.1.0",
     "@tabler/icons-react": "^2.35.0",
     "apexcharts": "^4.4.0",
+    "axios": "^1.9.0",
     "lodash": "^4.17.21",
     "prop-types": "^15.8.1",
     "react": "^19.0.0",
@@ -26,8 +27,8 @@
     "react-dom": "^19.0.0",
     "react-helmet": "^6.1.0",
     "react-mui-sidebar": "^1.6.3",
-    "simplebar-react": "^3.3.0",
-    "react-router": "^7.0.2"
+    "react-router": "^7.0.2",
+    "simplebar-react": "^3.3.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.0.3",
