@@ -8,6 +8,10 @@ class apiService{
     static async Register(formData){
         return axios.post(`${API_BASE_URL}${ADMIN_URL}/register`,formData);
     }
+
+    static async Login(credentials){
+        return axios.post(`${API_BASE_URL}${ADMIN_URL}/login`,credentials);
+    }
 }
 
 export default apiService;
