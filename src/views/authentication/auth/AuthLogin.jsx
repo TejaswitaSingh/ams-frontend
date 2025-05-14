@@ -29,12 +29,16 @@ const AuthLogin = ({ title, subtitle, subtext }) =>{
     const handleSubmit = async(e)=>{
         e.preventDefault();
         try {
-            const response = await apiService.login({
+            const response = await apiService.Login({
                 email:formData.email,
                 password:formData.password
-            })
-            console.log("Login succesfull:",response.data)
-            navigate("/dashboard");
+            });
+            if(response.data.status ===1){
+                console.log("Login succesfull:",response.data);
+                navigate("/dashboard");
+            }else{
+                console.log("Login failed:", response.data.msg)
+            }
         } catch (error) {
             console.error('Login failed:', error);
         }
@@ -59,7 +63,7 @@ const AuthLogin = ({ title, subtitle, subtext }) =>{
             <Box mt="25px">
                 <Typography variant="subtitle1"
                     fontWeight={600} component="label" htmlFor='password' mb="5px" >Password</Typography>
-                <CustomTextField id="password" name="passowrd" type="password" variant="outlined" fullWidth value={formData.password} onChange={handleChange} />
+                <CustomTextField id="password" name="password" type="password" variant="outlined" fullWidth value={formData.password} onChange={handleChange} />
             </Box>
             <Stack justifyContent="space-between" direction="row" alignItems="center" my={2}>
                 <FormGroup>
@@ -81,19 +85,18 @@ const AuthLogin = ({ title, subtitle, subtext }) =>{
                 </Typography>
             </Stack>
         </Stack>
-        </Box>
+        
         <Box>
             <Button
                 color="primary"
                 variant="contained"
                 size="large"
                 fullWidth
-                component={Link}
-                to="/"
                 type="submit"
             >
                 Sign In
             </Button>
+        </Box>
         </Box>
         {subtitle}
     </>
