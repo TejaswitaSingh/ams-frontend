@@ -35,6 +35,8 @@ const AuthLogin = ({ title, subtitle, subtext }) =>{
             });
             if(response.data.status ===1){
                 console.log("Login succesfull:",response.data);
+                const token = response.data.token;
+                localStorage.setItem("adminToken", token);
                 navigate("/dashboard");
             }else{
                 console.log("Login failed:", response.data.msg)

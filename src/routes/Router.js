@@ -1,5 +1,6 @@
 import React, { lazy } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router';
+import AdminManagement from '../views/sample-page/AdminManagement';
 
 /* ***Layouts**** */
 const FullLayout = lazy(() => import('../layouts/full/FullLayout'));
@@ -7,7 +8,7 @@ const BlankLayout = lazy(() => import('../layouts/blank/BlankLayout'));
 
 /* ****Pages***** */
 const Dashboard = lazy(() => import('../views/dashboard/Dashboard'))
-const SamplePage = lazy(() => import('../views/sample-page/SamplePage'))
+const SamplePage = lazy(() => import('../views/sample-page/AdminManagement'))
 const Error = lazy(() => import('../views/authentication/Error'));
 const Register = lazy(() => import('../views/authentication/Register'));
 const Login = lazy(() => import('../views/authentication/Login'));
@@ -30,7 +31,7 @@ const Router = [
     children: [
       { path: '/', element: <Navigate to="/dashboard" /> },
       { path: '/dashboard', exact: true, element: <Dashboard /> },
-      { path: '/sample-page', exact: true, element: <SamplePage /> },
+      { path: '/admin-details', exact: true, element: <AdminManagement /> },
       { path: "/tables/basic-table", element: <BasicTable /> },
       { path: "/form-layouts", element: <FormLayouts /> },
       // { path: "/form-elements/autocomplete", element: <ExAutoComplete /> },
