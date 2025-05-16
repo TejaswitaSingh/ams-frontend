@@ -29,7 +29,15 @@ class apiService {
     }
 
     static async getAdmins(){
-        return axios.get(`${API_BASE_URL}${ADMIN_URL}`, adminData,this.getAuthHeaders());
+        return axios.get(`${API_BASE_URL}${ADMIN_URL}/all`,this.getAuthHeaders());
+    }
+
+    static async updateAdmin(id,adminData){
+        return axios.put(`${API_BASE_URL}${ADMIN_URL}/${id}`,adminData,this.getAuthHeaders());
+    }
+
+    static async deleteAdmin(id){
+        return axios.delete(`${API_BASE_URL}${ADMIN_URL}/${id}`,this.getAuthHeaders());
     }
 
 }

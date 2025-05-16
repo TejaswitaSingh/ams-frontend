@@ -7,9 +7,13 @@ import { Add, Edit, Delete } from '@mui/icons-material';
 import DashboardCard from '../../components/shared/DashboardCard';
 import apiService from '../../services/apiService';
 import AdminCreateDialog from './AdminCreateDialog';
+import AdminUpdateDialog from './AdminUpdateDialog';
+import AdminDeleteDialog from './AdminDeleteDialog';
 
 const AdminManagement = () => {
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [admins, setAdmins] = useState([]);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -23,6 +27,32 @@ const AdminManagement = () => {
     password: "",
     status: true
   });
+  const [selectedAdminId,setSelectedAdminId] = useState(null);
+  const [adminToDelete, setAdminToDelete] = useState(null);
+
+   const handleDeleteClick = (admin) => {
+    setAdminToDelete(admin);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      const response = await apiService.deleteAdmin(adminToDelete._id);
+      if (response.data.status === 1) {
+        setAdmins(admins.filter(admin => admin._id !== adminToDelete._id));
+        setOpenDeleteDialog(false);
+      } else {
+        console.log(response.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setOpenDeleteDialog(false);
+    setAdminToDelete(null);
+  };
 
   const fetchAdmins = async () => {
     try {
@@ -67,8 +97,8 @@ const AdminManagement = () => {
           password: "",
           status: true
         });
-        setOpenDialog(false);
-        // fetchAdmins(); // Refresh the list
+        fetchAdmins();
+        setOpenCreateDialog(false);
       } else {
         console.log(response.data);
       }
@@ -78,6 +108,55 @@ const AdminManagement = () => {
     }
   };
 
+  const handleEditClick = (admin) => {
+    setSelectedAdminId(admin._id);
+    setFormData({
+      firstName: admin.firstName,
+      lastName: admin.lastName,
+      phoneNumber: admin.phoneNumber,
+      email: admin.email,
+      username: admin.username,
+      profilePicture: admin.profilePicture,
+      userType: admin.userType,
+      isEmailVerified: admin.isEmailVerified,
+      password: "", // Don't pre-fill password
+      status: admin.status
+    });
+    setOpenUpdateDialog(true);
+  };
+
+  const handleUpdateAdmin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await apiService.updateAdmin(selectedAdminId, formData);
+      if (response.data.status === 1) {
+        fetchAdmins();
+        resetForm();
+        setOpenUpdateDialog(false);
+      } else {
+        console.log(response.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      email: "",
+      username: "",
+      profilePicture: "",
+      userType: "admin",
+      isEmailVerified: false,
+      password: "",
+      status: true
+    });
+    setSelectedAdminId(null);
+  };
+
   return (
     <DashboardCard
       title="Admin Management"
@@ -85,18 +164,36 @@ const AdminManagement = () => {
         <Button 
           variant="contained" 
           startIcon={<Add />} 
-          onClick={() => setOpenDialog(true)}
+          onClick={() => setOpenCreateDialog(true)}
         >
           Add Admin
         </Button>
       }
     >
       <AdminCreateDialog
-        open={openDialog}
-        handleClose={() => setOpenDialog(false)}
+        open={openCreateDialog}
+        handleClose={() => setOpenCreateDialog(false)}
         formData={formData}
         handleChange={handleChange}
         handleSubmit={handleCreateAdmin}
+      />
+
+      <AdminUpdateDialog
+        open={openUpdateDialog}
+        handleClose={() => {
+          setOpenUpdateDialog(false);
+          resetForm();
+        }}
+        formData={formData}
+        handleChange={handleChange}
+        handleSubmit={handleUpdateAdmin}
+      />
+
+      <AdminDeleteDialog
+        open={openDeleteDialog}
+        handleClose={handleCancelDelete}
+        handleConfirm={handleConfirmDelete}
+        adminToDelete={adminToDelete}
       />
 
       <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
@@ -113,8 +210,8 @@ const AdminManagement = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {admins.map((admin, index) => (
-              <TableRow key={admin._id || index}>
+            {admins.map((admin) => (
+              <TableRow key={admin._id}>
                 <TableCell>{admin._id}</TableCell>
                 <TableCell>{admin.firstName} {admin.lastName}</TableCell>
                 <TableCell>{admin.email}</TableCell>
@@ -144,8 +241,8 @@ const AdminManagement = () => {
                   />
                 </TableCell>
                 <TableCell>
-                  <IconButton><Edit /></IconButton>
-                  <IconButton><Delete /></IconButton>
+                  <IconButton onClick={() => handleEditClick(admin)}><Edit /></IconButton>
+                  <IconButton onClick={() => handleDeleteClick(admin)} color="error"><Delete /></IconButton>
                 </TableCell>
               </TableRow>
             ))}
