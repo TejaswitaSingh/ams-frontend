@@ -204,9 +204,9 @@ const Menuitems = [
   // },
   {
     id: uniqueId(),
-    title: 'Sample Page',
+    title: 'Admin Management',
     icon: IconAperture,
-    href: '/sample-page',
+    href: '/admin-management',
   },
   // {
   //   navlabel: true,
