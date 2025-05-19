@@ -27,10 +27,10 @@ const AdminManagement = () => {
     password: "",
     status: true
   });
-  const [selectedAdminId,setSelectedAdminId] = useState(null);
+  const [selectedAdminId, setSelectedAdminId] = useState(null);
   const [adminToDelete, setAdminToDelete] = useState(null);
 
-   const handleDeleteClick = (admin) => {
+  const handleDeleteClick = (admin) => {
     setAdminToDelete(admin);
     setOpenDeleteDialog(true);
   };
@@ -59,7 +59,7 @@ const AdminManagement = () => {
       const response = await apiService.getAdmins();
       if (response.data && response.data.status === 1) {
         setAdmins(response.data.data);
-      }else {
+      } else {
         throw new Error(response.data?.message || 'Failed to fetch admins');
       }
     } catch (error) {
@@ -161,9 +161,9 @@ const AdminManagement = () => {
     <DashboardCard
       title="Admin Management"
       action={
-        <Button 
-          variant="contained" 
-          startIcon={<Add />} 
+        <Button
+          variant="contained"
+          startIcon={<Add />}
           onClick={() => setOpenCreateDialog(true)}
         >
           Add Admin
@@ -200,7 +200,7 @@ const AdminManagement = () => {
         <Table sx={{ whiteSpace: 'nowrap', mt: 2 }}>
           <TableHead>
             <TableRow>
-              <TableCell><Typography fontWeight={600}>ID</Typography></TableCell>
+              <TableCell><Typography fontWeight={600}>#</Typography></TableCell>
               <TableCell><Typography fontWeight={600}>Name</Typography></TableCell>
               <TableCell><Typography fontWeight={600}>Email</Typography></TableCell>
               <TableCell><Typography fontWeight={600}>Phone</Typography></TableCell>
@@ -210,34 +210,34 @@ const AdminManagement = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {admins.map((admin) => (
+            {admins.map((admin, index) => (
               <TableRow key={admin._id}>
-                <TableCell>{admin._id}</TableCell>
+                <TableCell>{index + 1}</TableCell>
                 <TableCell>{admin.firstName} {admin.lastName}</TableCell>
                 <TableCell>{admin.email}</TableCell>
                 <TableCell>{admin.phoneNumber}</TableCell>
                 <TableCell>
-                  <Chip 
-                    label={admin.userType} 
-                    sx={{ 
-                      backgroundColor: 
-                        admin.userType === 'superadmin' ? '#9c27b0' : 
-                        admin.userType === 'admin' ? '#2196f3' : 
-                        admin.userType === 'moderator' ? '#ff9800' : 
-                        '#607d8b',
-                      color: '#fff' 
-                    }} 
-                    size="small" 
+                  <Chip
+                    label={admin.userType}
+                    sx={{
+                      backgroundColor:
+                        admin.userType === 'superadmin' ? '#9c27b0' :
+                          admin.userType === 'admin' ? '#2196f3' :
+                            admin.userType === 'moderator' ? '#ff9800' :
+                              '#607d8b',
+                      color: '#fff'
+                    }}
+                    size="small"
                   />
                 </TableCell>
                 <TableCell>
-                  <Chip 
-                    label={admin.status ? 'Active' : 'Inactive'} 
-                    sx={{ 
-                      backgroundColor: admin.status ? '#4caf50' : '#f44336', 
-                      color: '#fff' 
-                    }} 
-                    size="small" 
+                  <Chip
+                    label={admin.status ? 'Active' : 'Inactive'}
+                    sx={{
+                      backgroundColor: admin.status ? '#4caf50' : '#f44336',
+                      color: '#fff'
+                    }}
+                    size="small"
                   />
                 </TableCell>
                 <TableCell>
