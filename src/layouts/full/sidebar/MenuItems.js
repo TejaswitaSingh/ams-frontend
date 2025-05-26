@@ -208,6 +208,12 @@ const Menuitems = [
     icon: IconAperture,
     href: '/admin-management',
   },
+  {
+    id: uniqueId(),
+    title: 'Teacher Management',
+    icon: IconAperture,
+    href: '/teacher-management',
+  },
   // {
   //   navlabel: true,
   //   subheader: 'Apps',

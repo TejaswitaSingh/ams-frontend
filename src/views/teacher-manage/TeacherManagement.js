@@ -6,15 +6,15 @@ import {
 import { Add, Edit, Delete } from '@mui/icons-material';
 import DashboardCard from '../../components/shared/DashboardCard';
 import apiService from '../../services/apiService';
-import AdminCreateDialog from './AdminCreateDialog';
-import AdminUpdateDialog from './AdminUpdateDialog';
-import AdminDeleteDialog from './AdminDeleteDialog';
+import TeacherCreateDialog from './TeacherCreateDialog';
+import TeacherUpdateDialog from './TeacherUpdateDialog';
+import TeacherDeleteDialog from './TeacherDeleteDialog';
 
-const AdminManagement = () => {
+const TeacherManagement = () => {
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [admins, setAdmins] = useState([]);
+  const [teachers, setTeachers] = useState([]);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -22,13 +22,14 @@ const AdminManagement = () => {
     email: "",
     username: "",
     profilePicture: "",
-    userType: "admin",
+    userType: "teacher",
     isEmailVerified: false,
     password: "",
+    classes:[],
     status: true
   });
-  const [selectedAdminId, setSelectedAdminId] = useState(null);
-  const [adminToDelete, setAdminToDelete] = useState(null);
+  const [selectedTeacherId, setSelectedTeacherId] = useState(null);
+  const [teacherToDelete, setTeacherToDelete] = useState(null);
   
   // Pagination state
   const [page, setPage] = useState(0);
@@ -36,17 +37,16 @@ const AdminManagement = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const handleDeleteClick = (admin) => {
-    setAdminToDelete(admin);
+  const handleDeleteClick = (teacher) => {
+    setTeacherToDelete(teacher);
     setOpenDeleteDialog(true);
   };
 
   const handleConfirmDelete = async () => {
     try {
-      const response = await apiService.deleteAdmin(adminToDelete._id);
+      const response = await apiService.deleteTeacher(teacherToDelete._id);
       if (response.data.status === 1) {
-        // After deletion, we need to refetch data to keep pagination in sync
-        fetchAdmins(page, rowsPerPage);
+        fetchTeachers(page, rowsPerPage);
         setOpenDeleteDialog(false);
       } else {
         console.log(response.data);
@@ -58,31 +58,32 @@ const AdminManagement = () => {
 
   const handleCancelDelete = () => {
     setOpenDeleteDialog(false);
-    setAdminToDelete(null);
+    setTeacherToDelete(null);
   };
 
-  const fetchAdmins = async (page = 0, limit = 10) => {
+  const fetchTeachers = async (page = 0, limit = 10) => {
     try {
       setLoading(true);
-      const response = await apiService.getAdmins(page + 1, rowsPerPage, {
-        userType: 'admin'
+      const response = await apiService.getTeachers(page + 1, rowsPerPage, {
+        status: 'active',
+        userType: 'teacher'
       });
       
       if (response.data && response.data.status === 1) {
-        setAdmins(response.data.data);
+        setTeachers(response.data.data);
         setTotalCount(response.data.pagination.total);
       } else {
-        throw new Error(response.data?.message || 'Failed to fetch admins');
+        throw new Error(response.data?.message || 'Failed to fetch teachers');
       }
     } catch (error) {
-      console.error('Error fetching admins:', error);
+      console.error('Error fetching teachers:', error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchAdmins(page, rowsPerPage);
+    fetchTeachers(page, rowsPerPage);
   }, [page, rowsPerPage]);
 
   const handleChangePage = (event, newPage) => {
@@ -91,7 +92,7 @@ const AdminManagement = () => {
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to first page when changing page size
+    setPage(0);
   };
 
   const handleChange = (e) => {
@@ -102,59 +103,47 @@ const AdminManagement = () => {
     }));
   };
 
-  const handleCreateAdmin = async (e) => {
+  const handleCreateTeacher = async (e) => {
     e.preventDefault();
     try {
-      const response = await apiService.createAdmin(formData)
+      const response = await apiService.createTeacher(formData)
       if (response.data.status === 1) {
-        // After creation, refetch the first page to show the new admin
-        fetchAdmins(0, rowsPerPage);
-        setFormData({
-          firstName: "",
-          lastName: "",
-          phoneNumber: "",
-          email: "",
-          username: "",
-          profilePicture: "",
-          userType: "admin",
-          isEmailVerified: false,
-          password: "",
-          status: true
-        });
+        fetchTeachers(0, rowsPerPage);
+        resetForm();
         setOpenCreateDialog(false);
       } else {
         console.log(response.data);
       }
     } catch (err) {
       console.error(err);
-      console.log('An error occurred while creating admin.');
+      console.log('An error occurred while creating teacher.');
     }
   };
 
-  const handleEditClick = (admin) => {
-    setSelectedAdminId(admin._id);
+  const handleEditClick = (teacher) => {
+    setSelectedTeacherId(teacher._id);
     setFormData({
-      firstName: admin.firstName,
-      lastName: admin.lastName,
-      phoneNumber: admin.phoneNumber,
-      email: admin.email,
-      username: admin.username,
-      profilePicture: admin.profilePicture,
-      userType: admin.userType,
-      isEmailVerified: admin.isEmailVerified,
-      password: "", // Don't pre-fill password
-      status: admin.status
+      firstName: teacher.firstName,
+      lastName: teacher.lastName,
+      phoneNumber: teacher.phoneNumber,
+      email: teacher.email,
+      username: teacher.username,
+      profilePicture: teacher.profilePicture,
+      userType: teacher.userType,
+      isEmailVerified: teacher.isEmailVerified,
+      password: "",
+      classes:teacher.classes || [],
+      status: teacher.status
     });
     setOpenUpdateDialog(true);
   };
 
-  const handleUpdateAdmin = async (e) => {
+  const handleUpdateTeacher = async (e) => {
     e.preventDefault();
     try {
-      const response = await apiService.updateAdmin(selectedAdminId, formData);
+      const response = await apiService.updateTeacher(selectedTeacherId, formData);
       if (response.data.status === 1) {
-        // After update, refetch current page to reflect changes
-        fetchAdmins(page, rowsPerPage);
+        fetchTeachers(page, rowsPerPage);
         resetForm();
         setOpenUpdateDialog(false);
       } else {
@@ -173,36 +162,37 @@ const AdminManagement = () => {
       email: "",
       username: "",
       profilePicture: "",
-      userType: "admin",
+      userType: "teacher",
       isEmailVerified: false,
       password: "",
+      classes:[],
       status: true
     });
-    setSelectedAdminId(null);
+    setSelectedTeacherId(null);
   };
 
   return (
     <DashboardCard
-      title="Admin Management"
+      title="Teacher Management"
       action={
         <Button
           variant="contained"
           startIcon={<Add />}
           onClick={() => setOpenCreateDialog(true)}
         >
-          Add Admin
+          Add Teacher
         </Button>
       }
     >
-      <AdminCreateDialog
+      <TeacherCreateDialog
         open={openCreateDialog}
         handleClose={() => setOpenCreateDialog(false)}
         formData={formData}
         handleChange={handleChange}
-        handleSubmit={handleCreateAdmin}
+        handleSubmit={handleCreateTeacher}
       />
 
-      <AdminUpdateDialog
+      <TeacherUpdateDialog
         open={openUpdateDialog}
         handleClose={() => {
           setOpenUpdateDialog(false);
@@ -210,14 +200,14 @@ const AdminManagement = () => {
         }}
         formData={formData}
         handleChange={handleChange}
-        handleSubmit={handleUpdateAdmin}
+        handleSubmit={handleUpdateTeacher}
       />
 
-      <AdminDeleteDialog
+      <TeacherDeleteDialog
         open={openDeleteDialog}
         handleClose={handleCancelDelete}
         handleConfirm={handleConfirmDelete}
-        adminToDelete={adminToDelete}
+        teacherToDelete={teacherToDelete}
       />
 
       <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
@@ -228,7 +218,7 @@ const AdminManagement = () => {
               <TableCell><Typography fontWeight={600}>Name</Typography></TableCell>
               <TableCell><Typography fontWeight={600}>Email</Typography></TableCell>
               <TableCell><Typography fontWeight={600}>Phone</Typography></TableCell>
-              <TableCell><Typography fontWeight={600}>Role</Typography></TableCell>
+              <TableCell><Typography fontWeight={600}>Subjects</Typography></TableCell>
               <TableCell><Typography fontWeight={600}>Status</Typography></TableCell>
               <TableCell><Typography fontWeight={600}>Actions</Typography></TableCell>
             </TableRow>
@@ -240,46 +230,48 @@ const AdminManagement = () => {
                   <Typography>Loading...</Typography>
                 </TableCell>
               </TableRow>
-            ) : admins.length === 0 ? (
+            ) : teachers.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7} align="center">
-                  <Typography>No admins found</Typography>
+                  <Typography>No teachers found</Typography>
                 </TableCell>
               </TableRow>
             ) : (
-              admins.map((admin, index) => (
-                <TableRow key={admin._id}>
+              teachers.map((teacher, index) => (
+                <TableRow key={teacher._id}>
                   <TableCell>{page * rowsPerPage + index + 1}</TableCell>
-                  <TableCell>{admin.firstName} {admin.lastName}</TableCell>
-                  <TableCell>{admin.email}</TableCell>
-                  <TableCell>{admin.phoneNumber}</TableCell>
+                  <TableCell>{teacher.firstName} {teacher.lastName}</TableCell>
+                  <TableCell>{teacher.email}</TableCell>
+                  <TableCell>{teacher.phoneNumber}</TableCell>
+                  <TableCell>
+                    {teacher.subjects?.slice(0, 2).map((subject, i) => (
+                      <Chip 
+                        key={i} 
+                        label={subject} 
+                        size="small" 
+                        sx={{ mr: 0.5, mb: 0.5 }} 
+                      />
+                    ))}
+                    {teacher.subjects?.length > 2 && (
+                      <Chip 
+                        label={`+${teacher.subjects.length - 2}`} 
+                        size="small" 
+                      />
+                    )}
+                  </TableCell>
                   <TableCell>
                     <Chip
-                      label={admin.userType}
+                      label={teacher.status ? 'Active' : 'Inactive'}
                       sx={{
-                        backgroundColor:
-                          admin.userType === 'superadmin' ? '#9c27b0' :
-                            admin.userType === 'admin' ? '#2196f3' :
-                              admin.userType === 'moderator' ? '#ff9800' :
-                                '#607d8b',
+                        backgroundColor: teacher.status ? '#4caf50' : '#f44336',
                         color: '#fff'
                       }}
                       size="small"
                     />
                   </TableCell>
                   <TableCell>
-                    <Chip
-                      label={admin.status ? 'Active' : 'Inactive'}
-                      sx={{
-                        backgroundColor: admin.status ? '#4caf50' : '#f44336',
-                        color: '#fff'
-                      }}
-                      size="small"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <IconButton onClick={() => handleEditClick(admin)}><Edit /></IconButton>
-                    <IconButton onClick={() => handleDeleteClick(admin)} color="error"><Delete /></IconButton>
+                    <IconButton onClick={() => handleEditClick(teacher)}><Edit /></IconButton>
+                    <IconButton onClick={() => handleDeleteClick(teacher)} color="error"><Delete /></IconButton>
                   </TableCell>
                 </TableRow>
               ))
@@ -304,4 +296,4 @@ const AdminManagement = () => {
   );
 };
 
-export default AdminManagement;
+export default TeacherManagement;
