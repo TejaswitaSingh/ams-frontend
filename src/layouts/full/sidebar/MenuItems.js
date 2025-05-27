@@ -202,17 +202,32 @@ const Menuitems = [
   //   icon: IconForms,
   //   href: '/form-layouts',
   // },
-  {
+  
+{
     id: uniqueId(),
-    title: 'Admin Management',
-    icon: IconAperture,
-    href: '/admin-management',
-  },
-  {
-    id: uniqueId(),
-    title: 'Teacher Management',
-    icon: IconAperture,
-    href: '/teacher-management',
+    title: 'User Management',
+    icon: IconUserCircle,
+    href: '/',
+    children: [
+      {
+      id: uniqueId(),
+      title: 'Admin Management',
+      icon: IconPoint,
+      href: '/admin-management',
+      },
+      {
+      id: uniqueId(),
+      title: 'Teacher Management',
+      icon: IconPoint,
+      href: '/teacher-management',
+      },
+      {
+      id: uniqueId(),
+      title: 'Student Management',
+      icon: IconPoint,
+      href: '/student-management',
+      },
+    ],
   },
   // {
   //   navlabel: true,
