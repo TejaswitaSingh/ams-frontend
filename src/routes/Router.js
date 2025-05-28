@@ -7,8 +7,9 @@ const BlankLayout = lazy(() => import('../layouts/blank/BlankLayout'));
 
 /* ****Pages***** */
 const Dashboard = lazy(() => import('../views/dashboard/Dashboard'))
-const AdminManagement = lazy(() => import('../views/admin-manage/AdminManagement'))
+const AdminManagement = lazy(() => import('../views/admin-manage/AdminManagement')) 
 const TeacherManagement = lazy(() => import('../views/teacher-manage/TeacherManagement'))
+const StudentManagement = lazy(() => import('../views/student-manage/StudentManagement'))
 const Error = lazy(() => import('../views/authentication/Error'));
 const Register = lazy(() => import('../views/authentication/Register'));
 const Login = lazy(() => import('../views/authentication/Login'));
@@ -33,6 +34,7 @@ const Router = [
       { path: '/dashboard', exact: true, element: <Dashboard /> },
       { path: '/admin-management', exact: true, element: <AdminManagement /> },
       { path: '/teacher-management', exact: true, element: <TeacherManagement /> },
+      { path: '/student-management', exact: true, element: <StudentManagement /> },
       { path: "/tables/basic-table", element: <BasicTable /> },
       { path: "/form-layouts", element: <FormLayouts /> },
       // { path: "/form-elements/autocomplete", element: <ExAutoComplete /> },
