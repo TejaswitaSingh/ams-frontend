@@ -229,6 +229,12 @@ const Menuitems = [
       },
     ],
   },
+  {
+      id: uniqueId(),
+      title: 'Class Management',
+      icon: IconPoint,
+      href: '/class-management',
+      },
   // {
   //   navlabel: true,
   //   subheader: 'Apps',
