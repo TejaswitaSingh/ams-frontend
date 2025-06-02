@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   Typography, Box, Table, TableBody, TableCell, TableHead, TableRow,
-  Button, IconButton, TableFooter, TablePagination
+  Button, IconButton, TableFooter, TablePagination, Chip
 } from '@mui/material';
 import { Add, Edit, Delete } from '@mui/icons-material';
 import DashboardCard from '../../components/shared/DashboardCard';
@@ -12,7 +12,11 @@ import ClassDeleteDialog from './ClassDeleteDialog';
 
 const ClassManagement = () => {
   const [classes, setClasses] = useState([]);
-  const [formData, setFormData] = useState({ name: '', description: '' });
+  const [formData, setFormData] = useState({ 
+    className: '', 
+    section: '',
+    classTeacher: null
+  });
   const [selectedClassId, setSelectedClassId] = useState(null);
   const [openCreate, setOpenCreate] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
@@ -54,7 +58,7 @@ const ClassManagement = () => {
       const res = await apiService.createClass(formData);
       if (res.data.status === 1) {
         fetchClasses();
-        setFormData({ name: '', description: '' });
+        setFormData({ className: '', section: '', classTeacher: null });
         setOpenCreate(false);
       }
     } catch (err) {
@@ -68,7 +72,7 @@ const ClassManagement = () => {
       const res = await apiService.updateClass(selectedClassId, formData);
       if (res.data.status === 1) {
         fetchClasses();
-        setFormData({ name: '', description: '' });
+        setFormData({ className: '', section: '', classTeacher: null });
         setOpenUpdate(false);
         setSelectedClassId(null);
       }
@@ -133,26 +137,36 @@ const ClassManagement = () => {
           <TableHead>
             <TableRow>
               <TableCell>#</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Description</TableCell>
+              <TableCell>Class Name</TableCell>
+              <TableCell>Section</TableCell>
+              <TableCell>Class Code</TableCell>
+              <TableCell>Students Count</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {loading ? (
-              <TableRow><TableCell colSpan={4} align="center">Loading...</TableCell></TableRow>
+              <TableRow><TableCell colSpan={6} align="center">Loading...</TableCell></TableRow>
             ) : classes.length === 0 ? (
-              <TableRow><TableCell colSpan={4} align="center">No classes found</TableCell></TableRow>
+              <TableRow><TableCell colSpan={6} align="center">No classes found</TableCell></TableRow>
             ) : (
               classes.map((cls, i) => (
                 <TableRow key={cls._id}>
                   <TableCell>{page * rowsPerPage + i + 1}</TableCell>
-                  <TableCell>{cls.name}</TableCell>
-                  <TableCell>{cls.description}</TableCell>
+                  <TableCell>{cls.className}</TableCell>
+                  <TableCell>{cls.section}</TableCell>
+                  <TableCell>
+                    <Chip label={cls.classCode} variant="outlined" />
+                  </TableCell>
+                  <TableCell>{cls.students?.length || 0}</TableCell>
                   <TableCell>
                     <IconButton onClick={() => {
                       setSelectedClassId(cls._id);
-                      setFormData({ name: cls.name, description: cls.description });
+                      setFormData({ 
+                        className: cls.className, 
+                        section: cls.section,
+                        classTeacher: cls.classTeacher
+                      });
                       setOpenUpdate(true);
                     }}><Edit /></IconButton>
                     <IconButton onClick={() => {
