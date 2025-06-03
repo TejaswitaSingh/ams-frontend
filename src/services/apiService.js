@@ -4,6 +4,7 @@ const API_BASE_URL = 'http://localhost:5000';
 const ADMIN_URL = '/admin';
 const TEACHER_URL = '/teacher';
 const STUDENT_URL = '/student';
+const CLASS_URL = '/class';
 
 class apiService {
   // Helper: Get token from localStorage
@@ -89,6 +90,29 @@ class apiService {
   static async deleteStudent(id) {
     return axios.delete(`${API_BASE_URL}${STUDENT_URL}/${id}`, this.getAuthHeaders());
   }
+
+  // ====================== CLASS ROUTES ======================
+  static async getClasses(page = 1, limit = 10, filters = {}) {
+    const params = { page, limit, ...filters };
+    return axios.get(`${API_BASE_URL}${CLASS_URL}/`, {
+      ...this.getAuthHeaders(),
+      params
+    });
+  }
+
+  static async createClass(data) {
+    return axios.post(`${API_BASE_URL}${CLASS_URL}/create`, data, this.getAuthHeaders());
+  }
+
+  static async updateClass(id, data) {
+    return axios.put(`${API_BASE_URL}${CLASS_URL}/${id}`, data, this.getAuthHeaders());
+  }
+
+  static async deleteClass(id) {
+    return axios.delete(`${API_BASE_URL}${CLASS_URL}/${id}`, this.getAuthHeaders());
+  }
+
+
 }
 
 export default apiService;

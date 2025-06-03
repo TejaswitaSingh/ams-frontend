@@ -6,14 +6,20 @@ const ClassDeleteDialog = ({ open, handleClose, handleConfirm, classToDelete }) 
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Delete Class</DialogTitle>
       <DialogContent>
-        <Typography>
-          Are you sure you want to delete{' '}
-          <strong>{classToDelete?.className} - {classToDelete?.section}</strong>?
-        </Typography>
+        {classToDelete ? (
+          <Typography>
+            Are you sure you want to delete{' '}
+            <strong>{classToDelete.className} - {classToDelete.section}</strong>?
+          </Typography>
+        ) : (
+          <Typography>Loading class details...</Typography>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} variant="outlined">Cancel</Button>
-        <Button onClick={handleConfirm} variant="contained" color="error">Delete</Button>
+        <Button onClick={handleConfirm} variant="contained" color="error" disabled={!classToDelete}>
+          Delete
+        </Button>
       </DialogActions>
     </Dialog>
   );

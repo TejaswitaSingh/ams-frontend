@@ -5,6 +5,8 @@ import {
 } from '@mui/material';
 
 const ClassUpdateDialog = ({ open, handleClose, formData, handleChange, handleSubmit }) => {
+  const isFormValid = formData.className && formData.section; // Ensure className and section are provided
+
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
       <DialogTitle>Update Class</DialogTitle>
@@ -44,7 +46,7 @@ const ClassUpdateDialog = ({ open, handleClose, formData, handleChange, handleSu
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} variant="outlined">Cancel</Button>
-          <Button type="submit" variant="contained">Update</Button>
+          <Button type="submit" variant="contained" disabled={!isFormValid}>Update</Button>
         </DialogActions>
       </form>
     </Dialog>

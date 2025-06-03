@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Button,
   Dialog,
@@ -12,8 +12,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Autocomplete,
-  CircularProgress
+  Typography,
 } from "@mui/material";
 
 const sections = ["A", "B", "C", "D", "E", "F", "G", "H"]; // Expanded sections list
@@ -24,42 +23,7 @@ const ClassCreateDialog = ({
   handleSubmit,
   formData,
   handleChange,
-  teachers = [] // Assuming teachers list will be passed as prop
 }) => {
-  const [loadingTeachers, setLoadingTeachers] = useState(false);
-  const [teacherOptions, setTeacherOptions] = useState([]);
-
-  // Fetch teachers if not provided (you might want to fetch them in parent component instead)
-  useEffect(() => {
-    if (open && teachers.length === 0) {
-      setLoadingTeachers(true);
-      // Simulate API call to fetch teachers
-      setTimeout(() => {
-        setTeacherOptions([
-          { _id: "1", name: "John Doe" },
-          { _id: "2", name: "Jane Smith" },
-          { _id: "3", name: "Robert Johnson" }
-        ]);
-        setLoadingTeachers(false);
-      }, 1000);
-    } else {
-      setTeacherOptions(teachers);
-    }
-  }, [open, teachers]);
-
-  const handleTeacherChange = (event, newValue) => {
-    handleChange({
-      target: {
-        name: "classTeacher",
-        value: newValue?._id || null
-      }
-    });
-  };
-
-  const getTeacherNameById = (id) => {
-    return teacherOptions.find(teacher => teacher._id === id)?.name || '';
-  };
-
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle>Create New Class</DialogTitle>
@@ -76,8 +40,8 @@ const ClassCreateDialog = ({
                 onChange={handleChange}
                 placeholder="e.g. Class 10"
                 inputProps={{
-                  pattern: "[A-Za-z0-9 ]+", // Basic validation
-                  title: "Alphanumeric characters and spaces only"
+                  pattern: "[A-Za-z0-9 ]+",
+                  title: "Alphanumeric characters and spaces only",
                 }}
               />
             </Grid>
@@ -98,39 +62,29 @@ const ClassCreateDialog = ({
                 </Select>
               </FormControl>
             </Grid>
+
+            {/* Teacher and Student Headings */}
             <Grid item xs={12}>
-              <Autocomplete
-                options={teacherOptions}
-                getOptionLabel={(option) => option.name}
-                value={teacherOptions.find(t => t._id === formData.classTeacher) || null}
-                onChange={handleTeacherChange}
-                loading={loadingTeachers}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Class Teacher"
-                    placeholder="Search teacher..."
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <>
-                          {loadingTeachers ? <CircularProgress color="inherit" size={20} /> : null}
-                          {params.InputProps.endAdornment}
-                        </>
-                      ),
-                    }}
-                  />
-                )}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-              />
+              <Typography variant="h6" color="textSecondary" mt={2}>
+                Class Teacher (Data will be connected later)
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography variant="h6" color="textSecondary" mt={2}>
+                Students (Data will be connected later)
+              </Typography>
             </Grid>
           </Grid>
+
           {formData.className && formData.section && (
             <Box mt={2}>
               <Typography variant="caption" color="textSecondary">
                 Class Code will be automatically generated as:{" "}
                 <strong>
-                  c-{formData.className.toLowerCase().match(/\d+/)?.[0] || formData.className.toLowerCase().replace(/\s+/g, '-')}-{formData.section.toLowerCase()}
+                  c-{formData.className.toLowerCase().match(/\d+/)?.[0] ||
+                    formData.className.toLowerCase().replace(/\s+/g, "-")}
+                  -{formData.section.toLowerCase()}
                 </strong>
               </Typography>
             </Box>
@@ -141,8 +95,8 @@ const ClassCreateDialog = ({
         <Button color="error" onClick={handleClose}>
           Cancel
         </Button>
-        <Button 
-          variant="contained" 
+        <Button
+          variant="contained"
           onClick={handleSubmit}
           disabled={!formData.className || !formData.section}
         >

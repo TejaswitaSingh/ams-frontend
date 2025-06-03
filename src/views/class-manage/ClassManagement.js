@@ -134,66 +134,83 @@ const ClassManagement = () => {
 
       <Box sx={{ overflow: 'auto' }}>
         <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>#</TableCell>
-              <TableCell>Class Name</TableCell>
-              <TableCell>Section</TableCell>
-              <TableCell>Class Code</TableCell>
-              <TableCell>Students Count</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
-              <TableRow><TableCell colSpan={6} align="center">Loading...</TableCell></TableRow>
-            ) : classes.length === 0 ? (
-              <TableRow><TableCell colSpan={6} align="center">No classes found</TableCell></TableRow>
-            ) : (
-              classes.map((cls, i) => (
-                <TableRow key={cls._id}>
-                  <TableCell>{page * rowsPerPage + i + 1}</TableCell>
-                  <TableCell>{cls.className}</TableCell>
-                  <TableCell>{cls.section}</TableCell>
-                  <TableCell>
-                    <Chip label={cls.classCode} variant="outlined" />
-                  </TableCell>
-                  <TableCell>{cls.students?.length || 0}</TableCell>
-                  <TableCell>
-                    <IconButton onClick={() => {
-                      setSelectedClassId(cls._id);
-                      setFormData({ 
-                        className: cls.className, 
-                        section: cls.section,
-                        classTeacher: cls.classTeacher
-                      });
-                      setOpenUpdate(true);
-                    }}><Edit /></IconButton>
-                    <IconButton onClick={() => {
-                      setClassToDelete(cls);
-                      setOpenDelete(true);
-                    }} color="error"><Delete /></IconButton>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                count={totalCount}
-                page={page}
-                rowsPerPage={rowsPerPage}
-                onPageChange={(e, newPage) => setPage(newPage)}
-                onRowsPerPageChange={(e) => {
-                  setRowsPerPage(parseInt(e.target.value, 10));
-                  setPage(0);
-                }}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
+  <TableHead>
+    <TableRow>
+      <TableCell>#</TableCell>
+      <TableCell>Class Name</TableCell>
+      <TableCell>Section</TableCell>
+      <TableCell>Class Code</TableCell>
+      <TableCell>Students Count</TableCell>
+      <TableCell>Teacher</TableCell>
+      <TableCell>Student</TableCell>
+      <TableCell>Actions</TableCell>
+    </TableRow>
+  </TableHead>
+  <TableBody>
+    {loading ? (
+      <TableRow>
+        <TableCell colSpan={8} align="center">Loading...</TableCell>
+      </TableRow>
+    ) : classes.length === 0 ? (
+      <TableRow>
+        <TableCell colSpan={8} align="center">No classes found</TableCell>
+      </TableRow>
+    ) : (
+      classes.map((cls, i) => (
+        <TableRow key={cls._id}>
+          <TableCell>{page * rowsPerPage + i + 1}</TableCell>
+          <TableCell>{cls.className}</TableCell>
+          <TableCell>{cls.section}</TableCell>
+          <TableCell>
+            <Chip label={cls.classCode} variant="outlined" />
+          </TableCell>
+          <TableCell>{cls.students?.length || 0}</TableCell>
+          <TableCell>{/* Teacher content */}</TableCell>
+          <TableCell>{/* Student content */}</TableCell>
+          <TableCell>
+            <IconButton 
+              onClick={() => {
+                setSelectedClassId(cls._id);
+                setFormData({ 
+                  className: cls.className, 
+                  section: cls.section,
+                  classTeacher: cls.classTeacher
+                });
+                setOpenUpdate(true);
+              }}
+            >
+              <Edit />
+            </IconButton>
+            <IconButton 
+              onClick={() => {
+                setClassToDelete(cls);
+                setOpenDelete(true);
+              }} 
+              color="error"
+            >
+              <Delete />
+            </IconButton>
+          </TableCell>
+        </TableRow>
+      ))
+    )}
+  </TableBody>
+  <TableFooter>
+    <TableRow>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        count={totalCount}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={(e, newPage) => setPage(newPage)}
+        onRowsPerPageChange={(e) => {
+          setRowsPerPage(parseInt(e.target.value, 10));
+          setPage(0);
+        }}
+      />
+    </TableRow>
+  </TableFooter>
+</Table>
       </Box>
     </DashboardCard>
   );
