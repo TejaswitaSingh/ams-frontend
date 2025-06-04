@@ -205,25 +205,25 @@ const Menuitems = [
   
 {
     id: uniqueId(),
-    title: 'User Management',
+    title: 'Users',
     icon: IconUserCircle,
     href: '/',
     children: [
       {
       id: uniqueId(),
-      title: 'Admin Management',
+      title: 'Admins',
       icon: IconPoint,
       href: '/admin-management',
       },
       {
       id: uniqueId(),
-      title: 'Teacher Management',
+      title: 'Teachers',
       icon: IconPoint,
       href: '/teacher-management',
       },
       {
       id: uniqueId(),
-      title: 'Student Management',
+      title: 'Students',
       icon: IconPoint,
       href: '/student-management',
       },
@@ -231,8 +231,8 @@ const Menuitems = [
   },
   {
       id: uniqueId(),
-      title: 'Class Management',
-      icon: IconPoint,
+      title: 'Classes',
+      icon: IconNotebook,
       href: '/class-management',
       },
   // {
