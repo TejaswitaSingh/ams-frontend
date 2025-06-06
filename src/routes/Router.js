@@ -11,6 +11,7 @@ const AdminManagement = lazy(() => import('../views/admin-manage/AdminManagement
 const TeacherManagement = lazy(() => import('../views/teacher-manage/TeacherManagement'))
 const StudentManagement = lazy(() => import('../views/student-manage/StudentManagement'))
 const ClassManagement = lazy(() => import('../views/class-manage/ClassManagement'))
+const SectionManagement = lazy(() => import('../views/section-manage/SectionManagement'))
 const Error = lazy(() => import('../views/authentication/Error'));
 const Register = lazy(() => import('../views/authentication/Register'));
 const Login = lazy(() => import('../views/authentication/Login'));
@@ -37,6 +38,7 @@ const Router = [
       { path: '/teacher-management', exact: true, element: <TeacherManagement /> },
       { path: '/student-management', exact: true, element: <StudentManagement /> },
       { path: '/class-management', exact: true, element: <ClassManagement /> },
+      { path: '/section-management', exact: true, element: <SectionManagement /> },
       { path: "/tables/basic-table", element: <BasicTable /> },
       { path: "/form-layouts", element: <FormLayouts /> },
       // { path: "/form-elements/autocomplete", element: <ExAutoComplete /> },

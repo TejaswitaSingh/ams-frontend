@@ -1,27 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import {
   Typography, Box, Table, TableBody, TableCell, TableHead, TableRow,
-  Button, IconButton, TableFooter, TablePagination, Chip
+  Button, IconButton, TableFooter, TablePagination, Chip,
+  Menu, MenuItem
 } from '@mui/material';
-import { Add, Edit, Delete } from '@mui/icons-material';
+import { Add, MoreVert, Edit, Delete, List } from '@mui/icons-material';
 import DashboardCard from '../../components/shared/DashboardCard';
 import apiService from '../../services/apiService';
 import ClassCreateDialog from './ClassCreateDialog';
 import ClassUpdateDialog from './ClassUpdateDialog';
 import ClassDeleteDialog from './ClassDeleteDialog';
+import { useNavigate } from 'react-router-dom';
 
 const ClassManagement = () => {
+  const navigate = useNavigate();
   const [classes, setClasses] = useState([]);
-  const [formData, setFormData] = useState({ 
-    className: '', 
-    section: '',
-    classTeacher: null
+  const [formData, setFormData] = useState({
+    className: ''
   });
   const [selectedClassId, setSelectedClassId] = useState(null);
   const [openCreate, setOpenCreate] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [classToDelete, setClassToDelete] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedClass, setSelectedClass] = useState(null);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -55,10 +58,10 @@ const ClassManagement = () => {
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      const res = await apiService.createClass(formData);
+      const res = await apiService.createClass({ className: formData.className });
       if (res.data.status === 1) {
         fetchClasses();
-        setFormData({ className: '', section: '', classTeacher: null });
+        setFormData({ className: '' });
         setOpenCreate(false);
       }
     } catch (err) {
@@ -69,10 +72,10 @@ const ClassManagement = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const res = await apiService.updateClass(selectedClassId, formData);
+      const res = await apiService.updateClass(selectedClassId, { className: formData.className });
       if (res.data.status === 1) {
         fetchClasses();
-        setFormData({ className: '', section: '', classTeacher: null });
+        setFormData({ className: '' });
         setOpenUpdate(false);
         setSelectedClassId(null);
       }
@@ -94,6 +97,40 @@ const ClassManagement = () => {
     }
   };
 
+  const handleMenuOpen = (event, cls) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedClass(cls);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedClass(null);
+  };
+
+  const handleEditClick = () => {
+    if (selectedClass) {
+      setSelectedClassId(selectedClass._id);
+      setFormData({ className: selectedClass.className });
+      setOpenUpdate(true);
+    }
+    handleMenuClose();
+  };
+
+  const handleDeleteClick = () => {
+    if (selectedClass) {
+      setClassToDelete(selectedClass);
+      setOpenDelete(true);
+    }
+    handleMenuClose();
+  };
+
+  const handleSectionsClick = () => {
+    if (selectedClass) {
+      navigate(`/section-management`);
+    }
+    handleMenuClose();
+  };
+
   return (
     <DashboardCard
       title="Class Management"
@@ -103,6 +140,7 @@ const ClassManagement = () => {
         </Button>
       }
     >
+      {/* Create Dialog */}
       <ClassCreateDialog
         open={openCreate}
         handleClose={() => setOpenCreate(false)}
@@ -111,6 +149,7 @@ const ClassManagement = () => {
         handleSubmit={handleCreate}
       />
 
+      {/* Update Dialog */}
       <ClassUpdateDialog
         open={openUpdate}
         handleClose={() => {
@@ -122,6 +161,7 @@ const ClassManagement = () => {
         handleSubmit={handleUpdate}
       />
 
+      {/* Delete Dialog */}
       <ClassDeleteDialog
         open={openDelete}
         handleClose={() => {
@@ -134,84 +174,78 @@ const ClassManagement = () => {
 
       <Box sx={{ overflow: 'auto' }}>
         <Table>
-  <TableHead>
-    <TableRow>
-      <TableCell>#</TableCell>
-      <TableCell>Class Name</TableCell>
-      <TableCell>Section</TableCell>
-      <TableCell>Class Code</TableCell>
-      <TableCell>Students Count</TableCell>
-      <TableCell>Teacher</TableCell>
-      <TableCell>Student</TableCell>
-      <TableCell>Actions</TableCell>
-    </TableRow>
-  </TableHead>
-  <TableBody>
-    {loading ? (
-      <TableRow>
-        <TableCell colSpan={8} align="center">Loading...</TableCell>
-      </TableRow>
-    ) : classes.length === 0 ? (
-      <TableRow>
-        <TableCell colSpan={8} align="center">No classes found</TableCell>
-      </TableRow>
-    ) : (
-      classes.map((cls, i) => (
-        <TableRow key={cls._id}>
-          <TableCell>{page * rowsPerPage + i + 1}</TableCell>
-          <TableCell>{cls.className}</TableCell>
-          <TableCell>{cls.section}</TableCell>
-          <TableCell>
-            <Chip label={cls.classCode} variant="outlined" />
-          </TableCell>
-          <TableCell>{cls.students?.length || 0}</TableCell>
-          <TableCell>{/* Teacher content */}</TableCell>
-          <TableCell>{/* Student content */}</TableCell>
-          <TableCell>
-            <IconButton 
-              onClick={() => {
-                setSelectedClassId(cls._id);
-                setFormData({ 
-                  className: cls.className, 
-                  section: cls.section,
-                  classTeacher: cls.classTeacher
-                });
-                setOpenUpdate(true);
-              }}
-            >
-              <Edit />
-            </IconButton>
-            <IconButton 
-              onClick={() => {
-                setClassToDelete(cls);
-                setOpenDelete(true);
-              }} 
-              color="error"
-            >
-              <Delete />
-            </IconButton>
-          </TableCell>
-        </TableRow>
-      ))
-    )}
-  </TableBody>
-  <TableFooter>
-    <TableRow>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        count={totalCount}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        onPageChange={(e, newPage) => setPage(newPage)}
-        onRowsPerPageChange={(e) => {
-          setRowsPerPage(parseInt(e.target.value, 10));
-          setPage(0);
-        }}
-      />
-    </TableRow>
-  </TableFooter>
-</Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>S.No.</TableCell>
+              <TableCell>Class Name</TableCell>
+              <TableCell>Class Code</TableCell>
+              <TableCell>No. of Students</TableCell>
+              <TableCell>No. of Teachers</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={6} align="center">Loading...</TableCell>
+              </TableRow>
+            ) : classes.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} align="center">No classes found</TableCell>
+              </TableRow>
+            ) : (
+              classes.map((cls, i) => (
+                <TableRow key={cls._id}>
+                  <TableCell>{page * rowsPerPage + i + 1}</TableCell>
+                  <TableCell>{cls.className}</TableCell>
+                  <TableCell>
+                    <Chip label={cls.classCode} variant="outlined" />
+                  </TableCell>
+                  <TableCell>{cls.studentCount || 0}</TableCell>
+                  <TableCell>{cls.teacherCount || 0}</TableCell>
+                  <TableCell>
+                    <IconButton onClick={(e) => handleMenuOpen(e, cls)}>
+                      <MoreVert />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                count={totalCount}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                onPageChange={(e, newPage) => setPage(newPage)}
+                onRowsPerPageChange={(e) => {
+                  setRowsPerPage(parseInt(e.target.value, 10));
+                  setPage(0);
+                }}
+              />
+            </TableRow>
+          </TableFooter>
+        </Table>
       </Box>
+
+      {/* Actions Menu */}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+      >
+        <MenuItem onClick={handleEditClick}>
+          <Edit fontSize="small" sx={{ mr: 1 }} /> Edit
+        </MenuItem>
+        <MenuItem onClick={handleDeleteClick}>
+          <Delete fontSize="small" sx={{ mr: 1 }} /> Delete
+        </MenuItem>
+        <MenuItem onClick={handleSectionsClick}>
+          <List fontSize="small" sx={{ mr: 1 }} /> Sections
+        </MenuItem>
+      </Menu>
     </DashboardCard>
   );
 };

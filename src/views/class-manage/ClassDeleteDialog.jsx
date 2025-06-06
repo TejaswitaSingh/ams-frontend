@@ -1,5 +1,12 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from '@mui/material';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography
+} from '@mui/material';
 
 const ClassDeleteDialog = ({ open, handleClose, handleConfirm, classToDelete }) => {
   return (
@@ -9,7 +16,7 @@ const ClassDeleteDialog = ({ open, handleClose, handleConfirm, classToDelete }) 
         {classToDelete ? (
           <Typography>
             Are you sure you want to delete{' '}
-            <strong>{classToDelete.className} - {classToDelete.section}</strong>?
+            <strong>{classToDelete.className}</strong>?
           </Typography>
         ) : (
           <Typography>Loading class details...</Typography>

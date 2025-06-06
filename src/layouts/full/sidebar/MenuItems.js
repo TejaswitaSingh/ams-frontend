@@ -230,11 +230,25 @@ const Menuitems = [
     ],
   },
   {
+    id: uniqueId(),
+    title: 'Classes',
+    icon: IconNotebook,
+    href: '/',
+    children: [
+      {
       id: uniqueId(),
-      title: 'Classes',
-      icon: IconNotebook,
+      title: 'Class',
+      icon: IconPoint,
       href: '/class-management',
       },
+      {
+      id: uniqueId(),
+      title: 'Sections',
+      icon: IconPoint,
+      href: '/section-management',
+      }
+    ],
+  },
   // {
   //   navlabel: true,
   //   subheader: 'Apps',
