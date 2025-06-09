@@ -1,13 +1,13 @@
 import axios from "axios";
 
-const API_BASE_URL = 'http://localhost:5000';
-const ADMIN_URL = '/admin';
-const TEACHER_URL = '/teacher';
-const STUDENT_URL = '/student';
-const CLASS_URL = '/class';
+const API_BASE_URL = "http://localhost:5000";
+const ADMIN_URL = "/admin";
+const TEACHER_URL = "/teacher";
+const STUDENT_URL = "/student";
+const CLASS_URL = "/class";
+const SECTION_URL = "/section";
 
 class apiService {
-  // Helper: Get token from localStorage
   static getAuthHeaders() {
     const token = localStorage.getItem("adminToken");
     return {
@@ -34,7 +34,7 @@ class apiService {
     const params = { page, limit: pageSize, ...searchParams };
     return axios.get(`${API_BASE_URL}${ADMIN_URL}/all`, {
       ...this.getAuthHeaders(),
-      params
+      params,
     });
   }
 
@@ -54,7 +54,7 @@ class apiService {
   static async getTeachers(page = 1, limit = 10, filters = {}) {
     return axios.get(`${API_BASE_URL}${TEACHER_URL}/all`, {
       ...this.getAuthHeaders(),
-      params: { page, limit, ...filters }
+      params: { page, limit, ...filters },
     });
   }
 
@@ -75,7 +75,7 @@ class apiService {
     const params = { page, limit, ...filters };
     return axios.get(`${API_BASE_URL}${STUDENT_URL}`, {
       ...this.getAuthHeaders(),
-      params
+      params,
     });
   }
 
@@ -92,11 +92,11 @@ class apiService {
   }
 
   // ====================== CLASS ROUTES ======================
-  static async getClasses(page = 1, limit = 10, filters = {}) {
+  static async getClasses(page = 1, limit = 100, filters = {}) {
     const params = { page, limit, ...filters };
     return axios.get(`${API_BASE_URL}${CLASS_URL}/`, {
       ...this.getAuthHeaders(),
-      params
+      params,
     });
   }
 
@@ -112,7 +112,25 @@ class apiService {
     return axios.delete(`${API_BASE_URL}${CLASS_URL}/${id}`, this.getAuthHeaders());
   }
 
+  // ====================== SECTION ROUTES ======================
+  static async getSections(classId, page = 1, limit = 10) {
+    return axios.get(`${API_BASE_URL}${SECTION_URL}/${classId}`, {
+      ...this.getAuthHeaders(),
+      params: { page, limit },
+    });
+  }
 
+  static async createSection(data) {
+    return axios.post(`${API_BASE_URL}${SECTION_URL}/create`, data, this.getAuthHeaders());
+  }
+
+  static async updateSection(id, data) {
+    return axios.put(`${API_BASE_URL}${SECTION_URL}/${id}`, data, this.getAuthHeaders());
+  }
+
+  static async deleteSection(id) {
+    return axios.delete(`${API_BASE_URL}${SECTION_URL}/${id}`, this.getAuthHeaders());
+  }
 }
 
 export default apiService;

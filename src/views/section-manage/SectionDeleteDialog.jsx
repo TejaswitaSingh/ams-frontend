@@ -1,21 +1,26 @@
 import React from 'react';
 import {
   Dialog, DialogTitle, DialogContent, DialogActions,
-  Typography, Button
+  Typography, Button, Box
 } from '@mui/material';
 
 const SectionDeleteDialog = ({ open, handleClose, handleConfirm, sectionToDelete }) => {
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
       <DialogTitle>Delete Section</DialogTitle>
       <DialogContent>
-        <Typography>
-          Are you sure you want to delete section "{sectionToDelete?.sectionName}"?
-          This action cannot be undone.
-        </Typography>
+        <Box sx={{ mt: 1 }}>
+          <Typography>
+            Are you sure you want to delete the section{' '}
+            <strong>"{sectionToDelete?.sectionName}"</strong>? <br />
+            This action cannot be undone.
+          </Typography>
+        </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose} color="secondary" variant="outlined">
+          Cancel
+        </Button>
         <Button onClick={handleConfirm} variant="contained" color="error">
           Delete
         </Button>

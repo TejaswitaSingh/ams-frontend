@@ -126,7 +126,7 @@ const ClassManagement = () => {
 
   const handleSectionsClick = () => {
     if (selectedClass) {
-      navigate(`/section-management`);
+      navigate(`/section-management`,{ state: { class: selectedClass } });
     }
     handleMenuClose();
   };
