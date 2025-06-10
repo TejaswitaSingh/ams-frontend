@@ -18,117 +18,118 @@ class apiService {
   }
 
   // ====================== ADMIN ROUTES ======================
-  static async Register(formData) {
-    return axios.post(`${API_BASE_URL}${ADMIN_URL}/register`, formData);
+  static Register(data) {
+    return axios.post(`${API_BASE_URL}${ADMIN_URL}/register`, data);
   }
 
-  static async Login(credentials) {
+  static Login(credentials) {
     return axios.post(`${API_BASE_URL}${ADMIN_URL}/login`, credentials);
   }
 
-  static async createAdmin(adminData) {
-    return axios.post(`${API_BASE_URL}${ADMIN_URL}/create`, adminData, this.getAuthHeaders());
+  static createAdmin(data) {
+    return axios.post(`${API_BASE_URL}${ADMIN_URL}/create`, data, this.getAuthHeaders());
   }
 
-  static async getAdmins(page = 1, pageSize = 5, searchParams = {}) {
-    const params = { page, limit: pageSize, ...searchParams };
+  static getAdmins(page = 1, limit = 10, filters = {}) {
     return axios.get(`${API_BASE_URL}${ADMIN_URL}/all`, {
       ...this.getAuthHeaders(),
-      params,
+      params: { page, limit, ...filters },
     });
   }
 
-  static async updateAdmin(id, adminData) {
-    return axios.put(`${API_BASE_URL}${ADMIN_URL}/${id}`, adminData, this.getAuthHeaders());
+  static updateAdmin(id, data) {
+    return axios.put(`${API_BASE_URL}${ADMIN_URL}/${id}`, data, this.getAuthHeaders());
   }
 
-  static async deleteAdmin(id) {
+  static deleteAdmin(id) {
     return axios.delete(`${API_BASE_URL}${ADMIN_URL}/${id}`, this.getAuthHeaders());
   }
 
   // ====================== TEACHER ROUTES ======================
-  static async createTeacher(data) {
+  static createTeacher(data) {
     return axios.post(`${API_BASE_URL}${TEACHER_URL}/create`, data, this.getAuthHeaders());
   }
 
-  static async getTeachers(page = 1, limit = 10, filters = {}) {
+  static getTeachers(page = 1, limit = 10, filters = {}) {
     return axios.get(`${API_BASE_URL}${TEACHER_URL}/all`, {
       ...this.getAuthHeaders(),
       params: { page, limit, ...filters },
     });
   }
 
-  static async updateTeacher(id, data) {
+  static updateTeacher(id, data) {
     return axios.put(`${API_BASE_URL}${TEACHER_URL}/${id}`, data, this.getAuthHeaders());
   }
 
-  static async deleteTeacher(id) {
+  static deleteTeacher(id) {
     return axios.delete(`${API_BASE_URL}${TEACHER_URL}/${id}`, this.getAuthHeaders());
   }
 
   // ====================== STUDENT ROUTES ======================
-  static async createStudent(data) {
+  static createStudent(data) {
     return axios.post(`${API_BASE_URL}${STUDENT_URL}`, data, this.getAuthHeaders());
   }
 
-  static async getStudents(page = 1, limit = 10, filters = {}) {
-    const params = { page, limit, ...filters };
+  static getStudents(page = 1, limit = 10, filters = {}) {
     return axios.get(`${API_BASE_URL}${STUDENT_URL}`, {
       ...this.getAuthHeaders(),
-      params,
+      params: { page, limit, ...filters },
     });
   }
 
-  static async getStudentById(id) {
+  static getStudentById(id) {
     return axios.get(`${API_BASE_URL}${STUDENT_URL}/${id}`, this.getAuthHeaders());
   }
 
-  static async updateStudent(id, data) {
+  static updateStudent(id, data) {
     return axios.put(`${API_BASE_URL}${STUDENT_URL}/${id}`, data, this.getAuthHeaders());
   }
 
-  static async deleteStudent(id) {
+  static deleteStudent(id) {
     return axios.delete(`${API_BASE_URL}${STUDENT_URL}/${id}`, this.getAuthHeaders());
   }
 
   // ====================== CLASS ROUTES ======================
-  static async getClasses(page = 1, limit = 100, filters = {}) {
-    const params = { page, limit, ...filters };
-    return axios.get(`${API_BASE_URL}${CLASS_URL}/`, {
-      ...this.getAuthHeaders(),
-      params,
-    });
-  }
-
-  static async createClass(data) {
+  static createClass(data) {
     return axios.post(`${API_BASE_URL}${CLASS_URL}/create`, data, this.getAuthHeaders());
   }
 
-  static async updateClass(id, data) {
+  static getClasses(page = 1, limit = 10, filters = {}) {
+    return axios.get(`${API_BASE_URL}${CLASS_URL}`, {
+      ...this.getAuthHeaders(),
+      params: { page, limit, ...filters },
+    });
+  }
+
+  static getClassById(id) {
+    return axios.get(`${API_BASE_URL}${CLASS_URL}/${id}`, this.getAuthHeaders());
+  }
+
+  static updateClass(id, data) {
     return axios.put(`${API_BASE_URL}${CLASS_URL}/${id}`, data, this.getAuthHeaders());
   }
 
-  static async deleteClass(id) {
+  static deleteClass(id) {
     return axios.delete(`${API_BASE_URL}${CLASS_URL}/${id}`, this.getAuthHeaders());
   }
 
   // ====================== SECTION ROUTES ======================
-  static async getSections(classId, page = 1, limit = 10) {
+  static createSection(data) {
+    return axios.post(`${API_BASE_URL}${SECTION_URL}/create`, data, this.getAuthHeaders());
+  }
+
+  static getSections(classId, page = 1, limit = 10) {
     return axios.get(`${API_BASE_URL}${SECTION_URL}/${classId}`, {
       ...this.getAuthHeaders(),
       params: { page, limit },
     });
   }
 
-  static async createSection(data) {
-    return axios.post(`${API_BASE_URL}${SECTION_URL}/create`, data, this.getAuthHeaders());
-  }
-
-  static async updateSection(id, data) {
+  static updateSection(id, data) {
     return axios.put(`${API_BASE_URL}${SECTION_URL}/${id}`, data, this.getAuthHeaders());
   }
 
-  static async deleteSection(id) {
+  static deleteSection(id) {
     return axios.delete(`${API_BASE_URL}${SECTION_URL}/${id}`, this.getAuthHeaders());
   }
 }
